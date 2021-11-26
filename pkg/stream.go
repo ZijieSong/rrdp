@@ -37,10 +37,11 @@ func (s *Stream) ShakeHands() error {
 
 func (s *Stream) DeRegisterToConn() {
 	//close tcp peer
-	backend := s.Conn.StreamToBackEndConnStore.Get(s.StreamId).(*net.TCPConn)
+	backend := s.Conn.StreamToBackEndConnStore.Get(s.StreamId)
 	if backend != nil {
-		if err := (*backend).Close(); err != nil {
-			log.Error().Msgf("close to %s error: %s", (*backend).RemoteAddr(), err.Error())
+		back := backend.(*net.TCPConn)
+		if err := (*back).Close(); err != nil {
+			log.Error().Msgf("close to %s error: %s", (*back).RemoteAddr(), err.Error())
 		}
 	}
 	//rm from map
@@ -58,7 +59,6 @@ func (s *Stream) RegisterToConn(backendConn *net.TCPConn) {
 }
 
 func (s *Stream) Write(bytes []byte) (int, error) {
-	log.Info().Msgf("write byte to %d", s.StreamId)
 	err := s.WriteData(common.HANDLE_TYPE_CHAT, bytes)
 	return len(bytes), err
 }

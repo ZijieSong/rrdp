@@ -41,7 +41,7 @@ func Process(conn *Connection) {
 			log.Error().Msgf("socket read data(len=%d) error: %s", pLength, err.Error())
 			return
 		}
-		log.Info().Msgf("streamId is %d, pLength is %d ", streamId, pLength)
+		log.Debug().Msgf("streamId is %d, pLength is %d ", streamId, pLength)
 
 		//handle payload
 		switch hType {
@@ -63,24 +63,27 @@ func Process(conn *Connection) {
 				go func() {
 					if _, err := io.Copy(stream, backendConn); err != nil {
 						log.Error().Msgf("error copy from %s to stream: %s", stream.RealDest, err.Error())
-						_ = stream.Close()
+					} else {
+						log.Info().Msgf("conn closed, from %s to stream", stream.RealDest)
 					}
+					_ = stream.Close()
 				}()
-				log.Info().Msgf("register from stream %s to conn %s", streamId, backendConn.RemoteAddr())
+				log.Info().Msgf("register from stream %d to conn %s", streamId, backendConn.RemoteAddr())
 			}
 		case common.HANDLE_TYPE_CHAT:
 			{
-				backend := conn.StreamToBackEndConnStore.Get(streamId).(*net.TCPConn)
+				backend := conn.StreamToBackEndConnStore.Get(streamId)
 				if backend != nil {
-					_, err := (*backend).Write(payload)
+					back := backend.(*net.TCPConn)
+					_, err := (*back).Write(payload)
 					if err != nil {
-						log.Error().Msgf("Error write to %s, error is %s", (*backend).RemoteAddr(), err.Error())
+						log.Error().Msgf("Error write to %s, error is %s", (*back).RemoteAddr(), err.Error())
 						stream := conn.StreamStore[streamId]
 						if stream != nil {
 							_ = stream.Close()
 						}
 					}
-					log.Info().Msgf("send msg to stream %s, remote %s", streamId, backend.RemoteAddr())
+					log.Debug().Msgf("send msg to stream %d, remote %s", streamId, back.RemoteAddr())
 				} else {
 					//has not sync
 					stream := &Stream{
@@ -97,7 +100,7 @@ func Process(conn *Connection) {
 					stream.DeRegisterToConn()
 				}
 			}
-			log.Info().Msgf("final send to stream %s", streamId)
+			log.Info().Msgf("final send to stream %d", streamId)
 		}
 	}
 }

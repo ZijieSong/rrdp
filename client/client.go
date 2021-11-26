@@ -1,6 +1,7 @@
 package client
 
 import (
+	"../common"
 	"../pkg"
 	"bufio"
 	"fmt"
@@ -13,7 +14,6 @@ import (
 	"sync"
 	"syscall"
 	"unsafe"
-	"../common"
 )
 
 func Main(options *CliOptions) (err error) {
@@ -82,8 +82,10 @@ func ListenOnLocal(proxyServer *pkg.Connection) (err error) {
 		go func() {
 			if _, err := io.Copy(stream, conn); err != nil {
 				log.Error().Msgf("error copy from %s to stream: %s", stream.RealDest, err.Error())
-				_ = stream.Close()
+			} else {
+				log.Info().Msgf("tcp connection close, to %s", stream.RealDest)
 			}
+			_ = stream.Close()
 		}()
 
 	}

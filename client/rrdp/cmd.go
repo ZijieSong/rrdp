@@ -19,6 +19,7 @@ func init() {
 func main() {
 	options := &client.CliOptions{
 		LocalPorts: &cli.StringSlice{},
+		ConfigPath: os.Getenv("HOME"),
 	}
 
 	app := cli.NewApp()
