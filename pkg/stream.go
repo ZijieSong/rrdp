@@ -32,7 +32,7 @@ func (s *Stream) Close() error {
 }
 
 func (s *Stream) ShakeHands() error {
-	return s.WriteData(common.HANDLE_TYPE_SYN, []byte(s.RealDest))
+	return s.WriteData(common.SYN, []byte(s.RealDest))
 }
 
 func (s *Stream) DeRegisterToConn() {
@@ -50,7 +50,7 @@ func (s *Stream) DeRegisterToConn() {
 }
 
 func (s *Stream) SendFinalToStreamPeer() error {
-	return s.WriteData(common.HANDLE_TYPE_FINAL, []byte("bye"))
+	return s.WriteData(common.FINAL, []byte("bye"))
 }
 
 func (s *Stream) RegisterToConn(backendConn *net.TCPConn) {
@@ -59,12 +59,12 @@ func (s *Stream) RegisterToConn(backendConn *net.TCPConn) {
 }
 
 func (s *Stream) Write(bytes []byte) (int, error) {
-	err := s.WriteData(common.HANDLE_TYPE_CHAT, bytes)
+	err := s.WriteData(common.CHAT, bytes)
 	return len(bytes), err
 }
 
 func (s *Stream) SendPortExposedRequest(portPeer string) error {
-	return s.WriteData(common.HANDLE_TYPE_EXPOSE_REQ, []byte(portPeer))
+	return s.WriteData(common.EXPOSE_REQ, []byte(portPeer))
 }
 
 func (s *Stream) SendPortExposedResult(success bool) error {
@@ -74,7 +74,7 @@ func (s *Stream) SendPortExposedResult(success bool) error {
 	} else {
 		body[0] = common.FALSE
 	}
-	return s.WriteData(common.HANDLE_TYPE_EXPOSE_RES, body)
+	return s.WriteData(common.EXPOSE_RES, body)
 }
 
 func CreateStream(realAddr *net.TCPAddr, proxyServer *Connection, clientConn *net.TCPConn) (s *Stream, err error) {

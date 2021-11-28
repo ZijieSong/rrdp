@@ -11,7 +11,7 @@ import (
 )
 
 func Process(peerConn *Connection) {
-	ch := make(chan struct{},1)
+	ch := make(chan struct{}, 1)
 	defer func() {
 		peerConn.Close()
 		ch <- struct{}{}
@@ -51,7 +51,7 @@ func Process(peerConn *Connection) {
 
 		//handle payload
 		switch hType {
-		case common.HANDLE_TYPE_EXPOSE_REQ:
+		case common.EXPOSE_REQ:
 			{
 				go func() {
 					portExposedHandshakeStream := &Stream{
@@ -74,6 +74,7 @@ func Process(peerConn *Connection) {
 						return
 					}
 					listen := ln.(*net.TCPListener)
+					// when conn closed, close listen port too
 					go func() {
 						<-ch
 						_ = listen.Close()
@@ -112,7 +113,7 @@ func Process(peerConn *Connection) {
 					}
 				}()
 			}
-		case common.HANDLE_TYPE_EXPOSE_RES:
+		case common.EXPOSE_RES:
 			{
 				if payload[0] == common.FALSE {
 					log.Error().Msgf("cannot expose port %s to remote, please check if the port has already been listened on remote instance", peerConn.ExposedPort)
@@ -121,7 +122,7 @@ func Process(peerConn *Connection) {
 					log.Info().Msgf("expose port %s to remote successfully", peerConn.ExposedPort)
 				}
 			}
-		case common.HANDLE_TYPE_SYN:
+		case common.SYN:
 			{
 				realDest := string(payload)
 				stream := &Stream{
@@ -146,7 +147,7 @@ func Process(peerConn *Connection) {
 				}()
 				log.Info().Msgf("register from stream %d to peerConn %s", streamId, backendConn.RemoteAddr())
 			}
-		case common.HANDLE_TYPE_CHAT:
+		case common.CHAT:
 			{
 				backend := peerConn.StreamToBackEndConnStore.Get(streamId)
 				if backend != nil {
@@ -169,7 +170,7 @@ func Process(peerConn *Connection) {
 					_ = stream.SendFinalToStreamPeer()
 				}
 			}
-		case common.HANDLE_TYPE_FINAL:
+		case common.FINAL:
 			{
 				stream := peerConn.StreamStore[streamId]
 				if stream != nil {
