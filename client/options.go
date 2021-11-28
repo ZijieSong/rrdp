@@ -6,6 +6,9 @@ import (
 
 type CliOptions struct {
 	RemoteServer string
-	LocalPorts   *cli.StringSlice
-	ConfigPath   string
+
+	LocalPorts *cli.StringSlice
+	ConfigPath string
+
+	ExposedPorts *cli.StringSlice
 }

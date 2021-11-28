@@ -1,13 +1,13 @@
 package main
 
 import (
+	"../common"
 	"../pkg"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"net"
 	"os"
 	"sync"
-	"../common"
 )
 
 func init() {
@@ -21,6 +21,7 @@ func main() {
 		log.Error().Msgf("listen failed, err:%v\n", err)
 		return
 	}
+	log.Info().Msgf("server start successfully!")
 
 	for {
 		conn, err := listen.Accept()

@@ -18,8 +18,9 @@ func init() {
 
 func main() {
 	options := &client.CliOptions{
-		LocalPorts: &cli.StringSlice{},
-		ConfigPath: os.Getenv("HOME"),
+		LocalPorts:   &cli.StringSlice{},
+		ConfigPath:   os.Getenv("HOME"),
+		ExposedPorts: &cli.StringSlice{},
 	}
 
 	app := cli.NewApp()
@@ -29,6 +30,7 @@ func main() {
 	app.Flags = client.AppFlags(options)
 	app.Commands = []*cli.Command{
 		newLocalToRemoteCommand(options),
+		newRemoteToLocalCommand(options),
 	}
 
 	var cleaner common.Cleaner = &client.CliCleaner{}
@@ -43,10 +45,22 @@ func main() {
 
 func newLocalToRemoteCommand(options *client.CliOptions) *cli.Command {
 	return &cli.Command{
-		Name:  "lToR",
+		Name:  "proxy",
 		Usage: "local to remote proxy",
+		Flags: client.LocalToRemote(options),
 		Action: func(context *cli.Context) error {
-			return client.Main(options)
+			return client.Proxy(options)
+		},
+	}
+}
+
+func newRemoteToLocalCommand(options *client.CliOptions) *cli.Command {
+	return &cli.Command{
+		Name:  "expose",
+		Usage: "remote to local proxy",
+		Flags: client.RemoteToLocal(options),
+		Action: func(context *cli.Context) error {
+			return client.Expose(options)
 		},
 	}
 }

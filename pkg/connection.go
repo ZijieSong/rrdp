@@ -14,6 +14,7 @@ type Connection struct {
 	StreamStore              map[uint32]*Stream
 	NextStreamIdLock         sync.Mutex
 	NextStreamId             uint32
+	ExposedPort              string
 }
 
 func (c *Connection) Close() error {
