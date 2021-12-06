@@ -1,10 +1,10 @@
 package client
 
 import (
-	"../common"
-	"../pkg"
 	"bufio"
 	"fmt"
+	"github.com/ZijieSong/rrdp/common"
+	"github.com/ZijieSong/rrdp/pkg"
 	"github.com/rs/zerolog/log"
 	"io"
 	"net"

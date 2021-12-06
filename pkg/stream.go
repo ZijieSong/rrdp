@@ -1,7 +1,7 @@
 package pkg
 
 import (
-	"../common"
+	"github.com/ZijieSong/rrdp/common"
 	"github.com/rs/zerolog/log"
 	"net"
 )

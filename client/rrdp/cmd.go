@@ -1,8 +1,8 @@
 package main
 
 import (
-	"../../client"
-	"../../common"
+	"github.com/ZijieSong/rrdp/client"
+	"github.com/ZijieSong/rrdp/common"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/urfave/cli"

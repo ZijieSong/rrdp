@@ -1,9 +1,9 @@
 package pkg
 
 import (
-	"../common"
 	"encoding/binary"
 	"fmt"
+	"github.com/ZijieSong/rrdp/common"
 	"github.com/rs/zerolog/log"
 	"io"
 	"net"

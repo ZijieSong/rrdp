@@ -1,8 +1,8 @@
 package main
 
 import (
-	"../common"
-	"../pkg"
+	"github.com/ZijieSong/rrdp/common"
+	"github.com/ZijieSong/rrdp/pkg"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"net"
