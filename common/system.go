@@ -14,9 +14,18 @@ func SetupCloseHandler(c *Cleaner) (ch chan os.Signal) {
 	go func() {
 		<-ch
 		if err := (*c).Clean(); err != nil {
-			log.Err(err)
+			log.Error().Msgf(err.Error())
 		}
 		os.Exit(0)
 	}()
 	return
+}
+
+func FileExists(name string) bool {
+	if _, err := os.Stat(name); err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+	return true
 }

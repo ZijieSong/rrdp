@@ -34,13 +34,17 @@ func main() {
 	}
 
 	var cleaner common.Cleaner = &client.CliCleaner{}
-	common.SetupCloseHandler(&cleaner)
-	defer cleaner.Clean()
-
-	err := app.Run(os.Args)
-	if err != nil {
-		log.Error().Msgf("End with error: %s", err.Error())
+	app.ExitErrHandler = func(_ *cli.Context, err error) {
+		log.Error().Msgf("End with error %s", err.Error())
+		err = cleaner.Clean()
+		if err != nil {
+			log.Error().Msgf("cleaner occurs error, %s", err.Error())
+		}
+		os.Exit(1)
 	}
+	common.SetupCloseHandler(&cleaner)
+
+	_ = app.Run(os.Args)
 }
 
 func newLocalToRemoteCommand(options *client.CliOptions) *cli.Command {
