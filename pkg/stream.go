@@ -46,7 +46,7 @@ func (s *Stream) DeRegisterToConn() {
 	}
 	//rm from map
 	s.Conn.StreamToBackEndConnStore.Delete(s.StreamId)
-	delete(s.Conn.StreamStore, s.StreamId)
+	s.Conn.StreamStore.Delete(s.StreamId)
 }
 
 func (s *Stream) SendFinalToStreamPeer() error {
@@ -55,7 +55,7 @@ func (s *Stream) SendFinalToStreamPeer() error {
 
 func (s *Stream) RegisterToConn(backendConn *net.TCPConn) {
 	s.Conn.StreamToBackEndConnStore.Put(s.StreamId, backendConn)
-	s.Conn.StreamStore[s.StreamId] = s
+	s.Conn.StreamStore.Put(s.StreamId, s)
 }
 
 func (s *Stream) Write(bytes []byte) (int, error) {

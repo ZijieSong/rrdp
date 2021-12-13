@@ -29,7 +29,7 @@ func Expose(options *CliOptions) error {
 				Conn:                     &conn,
 				WriteLock:                sync.Mutex{},
 				StreamToBackEndConnStore: common.NewRwmap(),
-				StreamStore:              make(map[uint32]*pkg.Stream),
+				StreamStore:              common.NewRwmap(),
 				NextStreamIdLock:         sync.Mutex{},
 				NextStreamId:             0x0,
 				BackendStoreLock:         sync.RWMutex{},

@@ -11,7 +11,7 @@ type Connection struct {
 	WriteLock                sync.Mutex
 	StreamToBackEndConnStore *common.Rwmap
 	BackendStoreLock         sync.RWMutex
-	StreamStore              map[uint32]*Stream
+	StreamStore              *common.Rwmap //map[uint32]*Stream
 	NextStreamIdLock         sync.Mutex
 	NextStreamId             uint32
 	ExposedPort              string

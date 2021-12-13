@@ -33,7 +33,7 @@ func main() {
 			Conn:                     &conn,
 			WriteLock:                sync.Mutex{},
 			StreamToBackEndConnStore: common.NewRwmap(),
-			StreamStore:              make(map[uint32]*pkg.Stream),
+			StreamStore:              common.NewRwmap(),
 		})
 	}
 }

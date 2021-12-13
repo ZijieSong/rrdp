@@ -155,9 +155,9 @@ func Process(peerConn *Connection) {
 					_, err := (*back).Write(payload)
 					if err != nil {
 						log.Error().Msgf("Error write to %s, error is %s", (*back).RemoteAddr(), err.Error())
-						stream := peerConn.StreamStore[streamId]
+						stream := peerConn.StreamStore.Get(streamId)
 						if stream != nil {
-							_ = stream.Close()
+							_ = stream.(*Stream).Close()
 						}
 					}
 					log.Debug().Msgf("send msg to stream %d, remote %s", streamId, back.RemoteAddr())
@@ -172,9 +172,9 @@ func Process(peerConn *Connection) {
 			}
 		case common.FINAL:
 			{
-				stream := peerConn.StreamStore[streamId]
+				stream := peerConn.StreamStore.Get(streamId)
 				if stream != nil {
-					stream.DeRegisterToConn()
+					stream.(*Stream).DeRegisterToConn()
 				}
 			}
 			log.Info().Msgf("final send to stream %d", streamId)
