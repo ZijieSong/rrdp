@@ -3,31 +3,31 @@ package common
 import "sync"
 
 type Rwmap struct {
-	lock  sync.RWMutex
-	store map[interface{}]interface{}
+	Lock  sync.RWMutex
+	Store map[interface{}]interface{}
 }
 
 func NewRwmap() *Rwmap {
 	return &Rwmap{
-		lock:  sync.RWMutex{},
-		store: make(map[interface{}]interface{}),
+		Lock:  sync.RWMutex{},
+		Store: make(map[interface{}]interface{}),
 	}
 }
 
 func (m *Rwmap) Get(key interface{}) interface{} {
-	m.lock.RLock()
-	defer m.lock.RUnlock()
-	return m.store[key]
+	m.Lock.RLock()
+	defer m.Lock.RUnlock()
+	return m.Store[key]
 }
 
 func (m *Rwmap) Put(key interface{}, val interface{}) {
-	m.lock.Lock()
-	defer m.lock.Unlock()
-	m.store[key] = val
+	m.Lock.Lock()
+	defer m.Lock.Unlock()
+	m.Store[key] = val
 }
 
 func (m *Rwmap) Delete(key interface{}) {
-	m.lock.Lock()
-	defer m.lock.Unlock()
-	delete(m.store, key)
+	m.Lock.Lock()
+	defer m.Lock.Unlock()
+	delete(m.Store, key)
 }
